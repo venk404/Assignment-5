@@ -3,7 +3,8 @@
 # Variables
 VENV := venv
 DB_SERVICE := postgres
-API_IMAGE := restapi/restapi:v1
+API_SERVICE := restapi
+MIGRATION_SERVICE := migration
 
 # Determine OS-specific command prefix
 
@@ -15,22 +16,27 @@ Code_linting:
 
 #Run all the services at once
 Run_all_containers:
-	sudo docker-compose up
+	sudo docker-compose up -d
 
 #Setup Vagrant box
 Spin-vm:
 	vagrant up
+	connect_vm
 
-# connect_vm:
-# 	vagrant ssh-config > vagrant-ssh
-# 	vagrant ssh -c "cd /vagrant/Restapi && make all"
-#Run Postgres Services
+connect_vm:
+	vagrant ssh-config > vagrant-ssh
+	vagrant ssh -c "cd .. && cd .. && cd vagrant/ && make all"
+
 Start_DB:
-	 docker-compose up $(DB_SERVICE)
+	sudo docker-compose up $(DB_SERVICE)
 	
-#Build Api images
-docker_build:
-	docker build -t $(API_IMAGE) .
+Start_Migration:
+	sudo docker-compose up $(MIGRATION_SERVICE)
+	
+Start_API:
+	sudo docker-compose up $(API_SERVICE)
+
+
 
 install: $(VENV)/Scripts/activate
 
@@ -54,9 +60,11 @@ clean:
 ifeq ($(OS),Windows_NT)
 	@powershell -Command "Get-ChildItem -Recurse -Directory -Filter '__pycache__' | Remove-Item -Recurse -Force"
 	@powershell -Command "Get-ChildItem -Recurse -Directory -Filter 'data' | Remove-Item -Recurse -Force"
+	@powershell -Command "Get-ChildItem -Recurse -Directory -Filter '.vagrant' | Remove-Item -Recurse -Force"
 else
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type d -name "data" -exec rm -rf {} +
+	find . -type d -name ".vagrant" -exec rm -rf {} +
 endif
 
 .PHONY: all Spin-vm clean Code_linting Run_all_containers Start_DB  Build-api docker_build-api

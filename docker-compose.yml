@@ -1,22 +1,21 @@
-version: '3'
+version: '3.8'
 
 networks:
   app-network:
     driver: bridge
 
-
 services:
   Api1:
     build:
       context: .
-      dockerfile: Dockerfile  # Name of your Dockerfile if it's not the default "Dockerfile"
-    image: restapi/restapi:v1
+      dockerfile: Dockerfile
+    image: restapi:v1.0.0
     depends_on:
       postgres:
         condition: service_healthy
         restart: true
     environment:
-      POSTGRES_DB : ${POSTGRES_DB}
+      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_PORT: ${POSTGRES_PORT}
@@ -27,17 +26,16 @@ services:
     networks:
       - app-network
 
-
   Api2:
-    image: restapi/restapi:v1
+    image: restapi:v1.0.0
     depends_on:
-     Api1:
-      condition: service_started
-     postgres:
+      Api1:
+        condition: service_started
+      postgres:
         condition: service_healthy
         restart: true
     environment:
-      POSTGRES_DB : ${POSTGRES_DB}
+      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_PORT: ${POSTGRES_PORT}
@@ -49,22 +47,40 @@ services:
       - app-network
 
   nginx:
-    image: nginx:latest
+    image: nginx:1.29.0
     container_name: nginx
     ports:
       - "80:80"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro 
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       Api1:
         condition: service_started
-      Api2: 
+      Api2:
         condition: service_started
     networks:
       - app-network
 
+  migration:
+    build:
+      context: ./DB/Schemas/
+      dockerfile: Dockerfile
+    image: migration:v1.0.0
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+    depends_on:
+      postgres:
+        condition: service_healthy
+        restart: true
+    networks:
+      - app-network
+
   postgres:
-    image: postgres:15.3-bullseye
+    image: postgres:17.3
     restart: always
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -85,4 +101,3 @@ services:
 
 volumes:
   postgres_data:
-  

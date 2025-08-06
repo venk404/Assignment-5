@@ -21,11 +21,10 @@ Run_all_containers:
 #Setup Vagrant box
 Spin-vm:
 	vagrant up
-	connect_vm
 
-connect_vm:
-	vagrant ssh-config > vagrant-ssh
-	vagrant ssh -c "cd .. && cd .. && cd vagrant/ && make all"
+# connect_vm:
+# 	vagrant ssh-config > vagrant-ssh
+# 	vagrant ssh -c "cd .. && cd .. && cd vagrant/ && make all"
 
 Start_DB:
 	sudo docker-compose up $(DB_SERVICE)
@@ -67,4 +66,4 @@ else
 	find . -type d -name ".vagrant" -exec rm -rf {} +
 endif
 
-.PHONY: all Spin-vm clean Code_linting Run_all_containers Start_DB  Build-api docker_build-api
+.PHONY: all Spin-vm clean connect_vm Code_linting Run_all_containers Start_DB  Build-api docker_build-api

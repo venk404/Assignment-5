@@ -16,7 +16,7 @@ This project demonstrates deploying a FastAPI-based REST API with all its depend
 1) Clone the repository:
 
 ```bash
-  git clone https://github.com/venk404/Deploy-to-Bare-metal.git
+  git clone https://github.com/venk404/Assignment-5.git
 ```
 
 2) Change the Directory to Restapi Directory

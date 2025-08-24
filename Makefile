@@ -1,10 +1,16 @@
 .ONESHELL:
 
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
+
 # Variables
 VENV := venv
-DB_SERVICE := postgres
-API_SERVICE := restapi
+DB_SERVICE := DB
+API_SERVICE := Api1
 MIGRATION_SERVICE := migration
+Nginx_SERVICE := nginx
 
 # Determine OS-specific command prefix
 
@@ -27,13 +33,16 @@ Spin-vm:
 # 	vagrant ssh -c "cd .. && cd .. && cd vagrant/ && make all"
 
 Start_DB:
-	sudo docker-compose up $(DB_SERVICE)
+	sudo docker-compose up $(DB_SERVICE) -d --wait
 	
 Start_Migration:
-	sudo docker-compose up $(MIGRATION_SERVICE)
+	sudo docker-compose up $(MIGRATION_SERVICE) -d
 	
 Start_API:
-	sudo docker-compose up $(API_SERVICE)
+	docker-compose up $(API_SERVICE) -d
+
+Start_Nginx:
+	docker-compose up $(Nginx_SERVICE) -d
 
 
 
@@ -52,6 +61,9 @@ else
 	$(VENV)/bin/python -m pip install --upgrade pip
 	$(VENV)/bin/pip install -r requirements.txt
 endif
+
+down:
+	docker-compose down 
 
 
 # Define a clean step

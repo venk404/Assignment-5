@@ -39,9 +39,7 @@ This project demonstrates deploying a FastAPI-based REST API with all its depend
 ```
 6) Navigate to the Restapi directory within the vagrant folder in root folder.
 ```bash
-  cd ..
-  cd ..
-  cd vagrant/Restapi
+  cd vagrant/
 ```
 
 7) Navigate to the respective directory and run all services using Docker Compose(Inside vagrant box).

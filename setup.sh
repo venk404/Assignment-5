@@ -21,7 +21,7 @@ install_docker() {
     systemctl enable docker
     
     # Add vagrant user to docker group
-    usermod -aG docker vagrant
+    usermod -aG docker $USER
 }
 
 # Function to install Docker Compose
@@ -38,12 +38,19 @@ install_make() {
     apt-get install -y make
 }
 
+deploy_app() {
+    echo "Running the application using Docker Compose..."
+    cd /vagrant
+    make all
+}
+
 # Main execution
 main() {
     update_system
     install_docker
     install_docker_compose
     install_make
+    deploy_app
     echo "Setup completed successfully!"
 }
 

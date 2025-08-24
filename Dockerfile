@@ -6,7 +6,7 @@ WORKDIR /app
 RUN apk add --no-cache \
     gcc=14.2.0-r6 \
     musl-dev=1.2.5-r10 \
-    postgresql17-dev=17.5-r0
+    postgresql17-dev=17.6-r0
 
 # Create a virtual environment
 RUN python -m venv /app/venv
@@ -25,12 +25,12 @@ WORKDIR /app
 COPY --from=builder /app/venv /app/venv
 
 COPY ./code/ /app/code/
-
+COPY ./DB/Schemas/migrations/ /app/migrations/
 # Set environment variables
 ENV PATH="/app/venv/bin:$PATH"
 
 # Install runtime dependencies
-RUN apk add --no-cache libpq=17.5-r0
+RUN apk add --no-cache libpq=17.6-r0
 
 # Expose port 8000
 

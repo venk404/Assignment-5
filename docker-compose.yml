@@ -9,7 +9,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: restapi:v1.0.0
+    image: ${restapi_img}:${tag}
+    container_name: api1
     depends_on:
       DB:
         condition: service_healthy
@@ -24,9 +25,16 @@ services:
       - "8001:8001"
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8001/HealthCheck || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
 
   Api2:
-    image: restapi:v1.0.0
+    image: ${restapi_img}:${tag}
+    container_name: api2
     depends_on:
       DB:
         condition: service_healthy
@@ -45,6 +53,12 @@ services:
       - "8002:8002"
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8002/HealthCheck || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
 
   nginx:
     image: nginx:1.29.0
@@ -60,14 +74,10 @@ services:
         condition: service_healthy
     networks:
       - app-network
-    healthcheck:
-      test: ["CMD", "nginx", "-t"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
 
   migration:
     image: restapi:v1.0.0
+    container_name: migration
     depends_on:
       DB:
         condition: service_healthy
@@ -90,6 +100,7 @@ services:
 
   DB:
     image: postgres:17.3
+    container_name: postgres_db
     restart: always
     environment:
       POSTGRES_DB: ${POSTGRES_DB}

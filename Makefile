@@ -11,6 +11,8 @@ DB_SERVICE := DB
 API_SERVICE := Api1
 MIGRATION_SERVICE := migration
 Nginx_SERVICE := nginx
+tag := v1.0.0
+restapi_img := restapi
 
 # Determine OS-specific command prefix
 
@@ -22,7 +24,7 @@ Code_linting:
 
 #Run all the services at once
 Run_all_containers:
-	sudo docker-compose up -d
+	restapi_img=$(restapi_img) tag=$(tag) docker-compose up -d
 
 #Setup Vagrant box
 Spin-vm:
@@ -33,16 +35,16 @@ Spin-vm:
 # 	vagrant ssh -c "cd .. && cd .. && cd vagrant/ && make all"
 
 Start_DB:
-	sudo docker-compose up $(DB_SERVICE) -d --wait
+	restapi_img=$(restapi_img) tag=$(tag) docker-compose up $(DB_SERVICE) -d --wait
 	
 Start_Migration:
-	sudo docker-compose up $(MIGRATION_SERVICE) -d
+	restapi_img=$(restapi_img) tag=$(tag) docker-compose up $(MIGRATION_SERVICE) -d
 	
 Start_API:
-	docker-compose up $(API_SERVICE) -d
+	restapi_img=$(restapi_img) tag=$(tag) docker-compose up $(API_SERVICE) -d
 
 Start_Nginx:
-	docker-compose up $(Nginx_SERVICE) -d
+	restapi_img=$(restapi_img) tag=$(tag) docker-compose up $(Nginx_SERVICE) -d
 
 
 
@@ -63,7 +65,7 @@ else
 endif
 
 down:
-	docker-compose down 
+	restapi_img=$(restapi_img) tag=$(tag) docker-compose down 
 
 
 # Define a clean step
@@ -78,4 +80,4 @@ else
 	find . -type d -name ".vagrant" -exec rm -rf {} +
 endif
 
-.PHONY: all Spin-vm clean connect_vm Code_linting Run_all_containers Start_DB  Build-api docker_build-api
+.PHONY: all Spin-vm clean connect_vm Code_linting Run_all_containers Start_DB

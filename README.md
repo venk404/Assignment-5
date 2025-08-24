@@ -25,34 +25,23 @@ This project demonstrates deploying a FastAPI-based REST API with all its depend
   cd Assignment 5
 ```
 
-3) For Setting up a Vagrant box with all necessary dependencies pre-installed.
+3) Rename the .env.example file in the root directory
+
+4) For setting up a Vagrant box with all necessary dependencies pre-installed (API1, API2, Nginx, DB, migrations).
 
 ```bash
   make Spin-vm
 ```
 
-4) Rename the .env file from the Schema folder and also in the root directory
-
-5) SSH into the Vagrant box after setting it up"
+5) Clean
 ```bash
-    vagrant ssh-config > vagrant-ssh
-```
-6) Navigate to the Restapi directory within the vagrant folder in root folder.
-```bash
-  cd vagrant/
-```
-
-7) Navigate to the respective directory and run all services using Docker Compose(Inside vagrant box).
-
-```bash
-  make all
+make clean
 ```
 ## You can access the application from outside the Vagrant box.
 
 ```bash
   http://127.0.0.1:8080/docs
 ```
-
 
 
 ## SRE Assignment Link(Deploy REST API & its dependent services on bare metal)

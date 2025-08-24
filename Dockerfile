@@ -31,6 +31,7 @@ ENV PATH="/app/venv/bin:$PATH"
 
 # Install runtime dependencies
 RUN apk add --no-cache libpq=17.6-r0
+RUN apk add --no-cache curl
 
 # Expose port 8000
 

@@ -16,13 +16,13 @@ This project demonstrates deploying a FastAPI-based REST API with all its depend
 1) Clone the repository:
 
 ```bash
-  git clone https://github.com/venk404/Assignment-5.git
+  git clone https://github.com/venk404/Vagrant-based-Multi-container-Deployment.git
 ```
 
 2) Change the Directory to Restapi Directory
 
 ```bash
-  cd Assignment 5
+  cd Vagrant-based-Multi-container-Deployment/
 ```
 
 3) Rename the .env.example file in the root directory
@@ -43,6 +43,16 @@ make clean
   http://127.0.0.1:8080/docs
 ```
 
+## Conclusions
+All the expectations have been met for **Milestone 5**:
+
+- ✅ Vagrant box spun up using Vagrantfile to simulate production environment.  
+- ✅ Bash scripts provided to install required dependencies on the Vagrant box.  
+- ✅ Deployment done using Docker Compose and Makefile.  
+- ✅ Final setup includes 2 API containers, 1 DB container, and 1 Nginx container.  
+- ✅ Nginx configured for load balancing between API containers.  
+- ✅ API accessible via port 8080 with successful Postman requests (status 200).  
+- ✅ Nginx config committed in GitHub repository.
 
 ## SRE Assignment Link(Deploy REST API & its dependent services on bare metal)
 
